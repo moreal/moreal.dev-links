@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	//"google.golang.org/appengine"
-	//"google.golang.org/appengine/log"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 	"net/http"
 	"strings"
 )
@@ -15,18 +15,18 @@ func main() {
 
 // Handle redirection to somewhere
 func handleRedirection(w http.ResponseWriter, r *http.Request) {
-	//ctx := appengine.NewContext(r)
+	ctx := appengine.NewContext(r)
 
 	links := GetLinks()
-	name := strings.TrimLeft(r.URL.Path, "/")[1:]
+	name := strings.TrimLeft(r.URL.Path, "/")
 	url, ok := links[name]
 
 	if !ok {
 		http.Error(w, fmt.Sprintf("Not found / %s", name), http.StatusNotFound)
+		log.Errorf(ctx, "Not found / %s", name)
 		return
 	}
 
-
-	fmt.Printf("Redirect to %s\n", url)
+	log.Infof(ctx, "Redirect to %s", url)
 	http.Redirect(w, r, url, http.StatusMovedPermanently)
 }
