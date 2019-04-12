@@ -10,7 +10,7 @@ import (
 
 func main() {
 	http.HandleFunc("/", handleRedirection)
-	http.ListenAndServe(":8080", nil)
+	appengine.Main()
 }
 
 // Handle redirection to somewhere
